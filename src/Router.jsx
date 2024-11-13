@@ -1,61 +1,63 @@
 import { useState, useEffect } from 'react';
+import Setup from './components/setup';
 
 function Router() {
-	const [configExists, setConfigExists] = useState(null);
-	const [filePath, setFilePath] = useState('');
-	const [message, setMessage] = useState('');
+	const [configStatus, setConfigStatus] = useState(null);
+	const [configData, setConfigData] = useState(null);
 
+	// Function to fetch config status and data
+	const fetchConfig = async () => {
+		// Get config status
+		const response = await new Promise((resolve) => {
+			window.electron.getConfigStatus((_, status) => resolve(status));
+		});
+
+		setConfigStatus(response);
+
+		// If the config is valid, fetch the config data
+		if (response.exists && response.valid) {
+			try {
+				const configResponse = await window.electron.getConfig();
+				if (configResponse.success) {
+					setConfigData(configResponse.data);
+				} else {
+					console.error('Error fetching config:', configResponse.error);
+				}
+			} catch (error) {
+				console.error('Error fetching config:', error.message);
+			}
+		}
+	};
+
+	// Fetch config on component mount
 	useEffect(() => {
-		window.electron.getConfigStatus((_, exists) => setConfigExists(exists));
+		fetchConfig();
 	}, []);
 
-	const handleFilePathSubmit = async () => {
-		if (!filePath) {
-			setMessage('Please select a valid folder.');
-			return;
-		}
-
-		const success = await window.electron.createConfig(filePath);
-		if (success) {
-			setConfigExists(true);
-			setMessage('Config file created successfully!');
-		} else {
-			setMessage('Failed to create config file. Please try again.');
-		}
-	};
-
-	const handleBrowseFiles = async () => {
-		const selectedPath = await window.electron.openFileDialog();
-		if (selectedPath) {
-			setFilePath(selectedPath);
-			setMessage(`Selected path: ${selectedPath}/repleye-config.json`);
-		}
-	};
-
-	if (configExists === null) {
+	if (configStatus === null) {
 		return <div>Loading...</div>;
 	}
 
+	if (!configStatus.exists || !configStatus.valid) {
+		// Pass the fetchConfig function as the onComplete callback
+		return <Setup onComplete={fetchConfig} />;
+	}
+
 	return (
-		<>
-			{!configExists ? (
-				<div className="bg-blue-400">
-					<h1>Setup Config</h1>
-					<p>Specify a location to create your config file:</p>
-					<div>
-						<button onClick={handleBrowseFiles}>Browse</button>
-						{filePath && <p>Selected Folder: {filePath}</p>}
-					</div>
-					<button onClick={handleFilePathSubmit}>Create Config</button>
-					{message && <p>{message}</p>}
-				</div>
-			) : (
-				<div className="bg-green-400">
-					<h1>Vite + React</h1>
-					<p>Your app is ready to use!</p>
+		<div className="bg-green-400">
+			<h1>Welcome</h1>
+			<p>Your app is ready to use!</p>
+			{configData && (
+				<div>
+					<h2>Config Contents:</h2>
+					<ul>
+						<li>First Name: {configData.first_name}</li>
+						<li>Last Name: {configData.last_name}</li>
+						<li>Simplified Name: {configData.simplified_name}</li>
+					</ul>
 				</div>
 			)}
-		</>
+		</div>
 	);
 }
 

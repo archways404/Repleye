@@ -13,10 +13,19 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
 	getConfigStatus: (callback) => ipcRenderer.on('config-status', callback),
-	createConfig: (filePath) =>
+	saveConfig: (data) =>
 		new Promise((resolve) => {
-			ipcRenderer.once('config-created', (event, success) => resolve(success));
-			ipcRenderer.send('create-config', filePath);
+			ipcRenderer.once('save-config-response', (event, success) =>
+				resolve(success)
+			);
+			ipcRenderer.send('save-config', data);
+		}),
+	getConfig: () =>
+		new Promise((resolve) => {
+			ipcRenderer.once('get-config-response', (event, response) =>
+				resolve(response)
+			);
+			ipcRenderer.send('get-config');
 		}),
 	openFileDialog: () =>
 		new Promise((resolve) => {

@@ -9,24 +9,7 @@ const path = require('path');
 const fs = require('fs');
 
 let mainWindow;
-
-const checkConfigFile = () => {
-	let configPath;
-
-	if (process.platform === 'win32') {
-		// For Windows, check the M:\repleye-config.json
-		configPath = path.join('M:\\', 'repleye-config.json');
-	} else {
-		// For other platforms, check current directory + /config/repleye-config.json
-		configPath = path.join(process.cwd(), 'config', 'repleye-config.json');
-	}
-
-	// Log the path being checked for debugging
-	console.log(`Checking config file at: ${configPath}`);
-
-	// Return true if the file exists
-	return fs.existsSync(configPath);
-};
+let configPath;
 
 app.whenReady().then(() => {
 	// Create the browser window.
@@ -43,10 +26,12 @@ app.whenReady().then(() => {
 		},
 	});
 
-	const configExists = checkConfigFile();
-	mainWindow.webContents.once('did-finish-load', () => {
-		mainWindow.webContents.send('config-status', configExists);
-	});
+	const sendConfigStatus = () => {
+		const configStatus = checkConfigFile();
+		mainWindow.webContents.send('config-status', configStatus);
+	};
+
+	mainWindow.webContents.once('did-finish-load', sendConfigStatus);
 
 	// Load your Vite React app
 	const viteURL = 'http://localhost:5173'; // Change this to your Vite dev server or production build URL
@@ -70,25 +55,6 @@ app.whenReady().then(() => {
 	});
 });
 
-// Handle file dialog
-ipcMain.on('open-file-dialog', (event) => {
-	dialog
-		.showOpenDialog(mainWindow, {
-			properties: ['openDirectory'], // Change to ['openFile'] if selecting a file
-		})
-		.then((result) => {
-			if (!result.canceled && result.filePaths.length > 0) {
-				event.reply('file-dialog-path', result.filePaths[0]);
-			} else {
-				event.reply('file-dialog-path', '');
-			}
-		})
-		.catch((err) => {
-			console.error(err);
-			event.reply('file-dialog-path', '');
-		});
-});
-
 // Handle file creation
 ipcMain.on('create-config', (event, filePath) => {
 	try {
@@ -102,6 +68,38 @@ ipcMain.on('create-config', (event, filePath) => {
 	} catch (error) {
 		console.error(`Failed to create config: ${error.message}`);
 		event.reply('config-created', false);
+	}
+});
+
+ipcMain.on('save-config', (event, data) => {
+	try {
+		saveConfig(data);
+		event.reply('save-config-response', true);
+
+		// Send updated config status after saving
+		mainWindow.webContents.send('config-status', checkConfigFile());
+	} catch (error) {
+		console.error(`Failed to save config: ${error.message}`);
+		event.reply('save-config-response', false);
+	}
+});
+
+ipcMain.on('get-config', (event) => {
+	try {
+		if (fs.existsSync(configPath)) {
+			const configData = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+			event.reply('get-config-response', { success: true, data: configData });
+		} else {
+			event.reply('get-config-response', {
+				success: false,
+				error: 'Config file does not exist.',
+			});
+		}
+	} catch (error) {
+		event.reply('get-config-response', {
+			success: false,
+			error: error.message,
+		});
 	}
 });
 
@@ -121,3 +119,49 @@ app.on('activate', () => {
 		createWindow();
 	}
 });
+
+const checkConfigFile = () => {
+	if (process.platform === 'win32') {
+		configPath = path.join('M:\\', 'repleye-config.json');
+	} else {
+		configPath = path.join(process.cwd(), 'config', 'repleye-config.json');
+	}
+
+	// Check if the file exists
+	if (!fs.existsSync(configPath)) {
+		console.log(`Config file not found at: ${configPath}`);
+		return { exists: false, valid: false };
+	}
+
+	// Validate the contents of the config file
+	try {
+		const configData = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+		const requiredKeys = ['first_name', 'last_name', 'simplified_name'];
+
+		// Check if all required keys exist
+		const isValid = requiredKeys.every((key) => key in configData);
+
+		return { exists: true, valid: isValid };
+	} catch (error) {
+		console.error(`Error reading or parsing config: ${error.message}`);
+		return { exists: true, valid: false };
+	}
+};
+
+// Write to the config file
+const saveConfig = (data) => {
+	if (process.platform === 'win32') {
+		configPath = path.join('M:\\', 'repleye-config.json');
+	} else {
+		configPath = path.join(process.cwd(), 'config', 'repleye-config.json');
+	}
+
+	// Ensure directory exists (for non-Windows)
+	if (!fs.existsSync(path.dirname(configPath))) {
+		fs.mkdirSync(path.dirname(configPath), { recursive: true });
+	}
+
+	fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
+	console.log(`Config saved at: ${configPath}`);
+	return true;
+};
