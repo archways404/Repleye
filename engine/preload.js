@@ -9,9 +9,20 @@ window.addEventListener('DOMContentLoaded', () => {
 	}
 });
 
-const { contextBridge } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
-// Expose Electron APIs to the renderer process
 contextBridge.exposeInMainWorld('electron', {
-	// Add any Electron-specific functions here if needed
+	getConfigStatus: (callback) => ipcRenderer.on('config-status', callback),
+	createConfig: (filePath) =>
+		new Promise((resolve) => {
+			ipcRenderer.once('config-created', (event, success) => resolve(success));
+			ipcRenderer.send('create-config', filePath);
+		}),
+	openFileDialog: () =>
+		new Promise((resolve) => {
+			ipcRenderer.once('file-dialog-path', (event, filePath) =>
+				resolve(filePath)
+			);
+			ipcRenderer.send('open-file-dialog');
+		}),
 });
