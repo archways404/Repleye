@@ -8,3 +8,10 @@ window.addEventListener('DOMContentLoaded', () => {
 		replaceText(`${dependency}-version`, process.versions[dependency]);
 	}
 });
+
+const { contextBridge } = require('electron');
+
+// Expose Electron APIs to the renderer process
+contextBridge.exposeInMainWorld('electron', {
+	// Add any Electron-specific functions here if needed
+});

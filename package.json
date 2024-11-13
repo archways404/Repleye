@@ -2,11 +2,11 @@
 	"name": "repleye",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "vite",
+		"start": "vite",
 		"build": "vite build",
 		"serve": "vite preview",
 		"electron": "electron engine/main.js",
-		"start": "concurrently \"npm run dev\" \"npm run electron\""
+		"dev": "concurrently \"npm run start\" \"npm run electron\""
 	},
 	"dependencies": {
 		"dotenv": "^16.4.5",
