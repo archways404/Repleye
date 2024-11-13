@@ -69,14 +69,18 @@ function Router() {
 												([entryTitle, entryContent], index) => (
 													<li key={index}>
 														<h3>{entryTitle}</h3>
-														<p>
-															<strong>Swedish:</strong>{' '}
-															{entryContent['contents-swe']}
-														</p>
-														<p>
-															<strong>English:</strong>{' '}
-															{entryContent['contents-eng']}
-														</p>
+														<div>
+															<strong>Swedish:</strong>
+															<pre style={{ whiteSpace: 'pre-wrap' }}>
+																{entryContent['contents-swe']}
+															</pre>
+														</div>
+														<div>
+															<strong>English:</strong>
+															<pre style={{ whiteSpace: 'pre-wrap' }}>
+																{entryContent['contents-eng']}
+															</pre>
+														</div>
 													</li>
 												)
 											)}
