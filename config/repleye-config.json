@@ -1,5 +1,15 @@
 {
-  "first_name": "Philip",
-  "last_name": "Stenberg",
-  "simplified_name": "Philip S"
+	"first_name": "Philip",
+	"last_name": "Stenberg",
+	"simplified_name": "Philip S",
+	"entries": {
+		"test1": {
+			"contents-swe": "test1swe",
+			"contents-eng": "test1eng"
+		},
+		"test2": {
+			"contents-swe": "test2swe",
+			"contents-eng": "test2eng"
+		}
+	}
 }
