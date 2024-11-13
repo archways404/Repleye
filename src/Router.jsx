@@ -67,19 +67,101 @@ function Router() {
 										<ul>
 											{Object.entries(configData.entries).map(
 												([entryTitle, entryContent], index) => (
-													<li key={index}>
+													<li
+														key={index}
+														style={{
+															marginBottom: '20px',
+															borderBottom: '1px solid #ddd',
+															paddingBottom: '10px',
+														}}>
 														<h3>{entryTitle}</h3>
-														<div>
+														<div style={{ marginBottom: '10px' }}>
 															<strong>Swedish:</strong>
-															<pre style={{ whiteSpace: 'pre-wrap' }}>
-																{entryContent['contents-swe']}
-															</pre>
+															<div
+																style={{
+																	border: '1px solid #ccc',
+																	padding: '10px',
+																	marginTop: '5px',
+																	backgroundColor: '#f9f9f9',
+																	whiteSpace: 'pre-wrap',
+																}}
+																dangerouslySetInnerHTML={{
+																	__html: entryContent['contents-swe'],
+																}}></div>
+															<button
+																onClick={async () => {
+																	try {
+																		// Use Clipboard API with HTML type
+																		await navigator.clipboard.write([
+																			new ClipboardItem({
+																				'text/html': new Blob(
+																					[entryContent['contents-swe']],
+																					{ type: 'text/html' }
+																				),
+																			}),
+																		]);
+																		alert(
+																			'Swedish content copied to clipboard!'
+																		);
+																	} catch (err) {
+																		console.error('Failed to copy:', err);
+																		alert('Failed to copy Swedish content.');
+																	}
+																}}
+																style={{
+																	marginTop: '5px',
+																	padding: '5px 10px',
+																	backgroundColor: '#007BFF',
+																	color: 'white',
+																	border: 'none',
+																	cursor: 'pointer',
+																}}>
+																Copy Swedish
+															</button>
 														</div>
 														<div>
 															<strong>English:</strong>
-															<pre style={{ whiteSpace: 'pre-wrap' }}>
-																{entryContent['contents-eng']}
-															</pre>
+															<div
+																style={{
+																	border: '1px solid #ccc',
+																	padding: '10px',
+																	marginTop: '5px',
+																	backgroundColor: '#f9f9f9',
+																	whiteSpace: 'pre-wrap',
+																}}
+																dangerouslySetInnerHTML={{
+																	__html: entryContent['contents-eng'],
+																}}></div>
+															<button
+																onClick={async () => {
+																	try {
+																		// Use Clipboard API with HTML type
+																		await navigator.clipboard.write([
+																			new ClipboardItem({
+																				'text/html': new Blob(
+																					[entryContent['contents-eng']],
+																					{ type: 'text/html' }
+																				),
+																			}),
+																		]);
+																		alert(
+																			'English content copied to clipboard!'
+																		);
+																	} catch (err) {
+																		console.error('Failed to copy:', err);
+																		alert('Failed to copy English content.');
+																	}
+																}}
+																style={{
+																	marginTop: '5px',
+																	padding: '5px 10px',
+																	backgroundColor: '#007BFF',
+																	color: 'white',
+																	border: 'none',
+																	cursor: 'pointer',
+																}}>
+																Copy English
+															</button>
 														</div>
 													</li>
 												)

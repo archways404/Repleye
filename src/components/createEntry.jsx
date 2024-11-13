@@ -1,12 +1,16 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 function CreateEntry({ onComplete }) {
 	const [title, setTitle] = useState('');
-	const [contentsSwe, setContentsSwe] = useState('');
-	const [contentsEng, setContentsEng] = useState('');
 	const [message, setMessage] = useState('');
+	const contentsSweRef = useRef(null);
+	const contentsEngRef = useRef(null);
 
 	const handleSaveEntry = async () => {
+		// Get the innerHTML of the contentEditable divs
+		const contentsSwe = contentsSweRef.current.innerHTML;
+		const contentsEng = contentsEngRef.current.innerHTML;
+
 		if (!title || !contentsSwe || !contentsEng) {
 			setMessage('All fields are required.');
 			return;
@@ -39,8 +43,8 @@ function CreateEntry({ onComplete }) {
 				setMessage('Entry saved successfully!');
 				// Reset fields
 				setTitle('');
-				setContentsSwe('');
-				setContentsEng('');
+				contentsSweRef.current.innerHTML = '';
+				contentsEngRef.current.innerHTML = '';
 				// Notify parent component (if applicable)
 				onComplete();
 			} else {
@@ -67,17 +71,29 @@ function CreateEntry({ onComplete }) {
 			</div>
 			<div>
 				<label>Swedish Contents:</label>
-				<textarea
-					value={contentsSwe}
-					onChange={(e) => setContentsSwe(e.target.value)}
-					placeholder="Enter Swedish contents"></textarea>
+				<div
+					ref={contentsSweRef}
+					contentEditable
+					style={{
+						border: '1px solid #ccc',
+						padding: '10px',
+						minHeight: '100px',
+						marginBottom: '20px',
+					}}
+					placeholder="Enter Swedish contents"></div>
 			</div>
 			<div>
 				<label>English Contents:</label>
-				<textarea
-					value={contentsEng}
-					onChange={(e) => setContentsEng(e.target.value)}
-					placeholder="Enter English contents"></textarea>
+				<div
+					ref={contentsEngRef}
+					contentEditable
+					style={{
+						border: '1px solid #ccc',
+						padding: '10px',
+						minHeight: '100px',
+						marginBottom: '20px',
+					}}
+					placeholder="Enter English contents"></div>
 			</div>
 			<button onClick={handleSaveEntry}>Save Entry</button>
 			{message && <p>{message}</p>}
