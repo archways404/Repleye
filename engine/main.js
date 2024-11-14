@@ -33,8 +33,10 @@ app.whenReady().then(() => {
 
 	mainWindow.webContents.once('did-finish-load', sendConfigStatus);
 
-	// Load your Vite React app
-	const viteURL = 'http://localhost:5173'; // Change this to your Vite dev server or production build URL
+	// NOTE THIS IS ONLY FOR DEVELOPMENT
+	const viteURL = 'http://localhost:5173';
+
+	// NOTE USE BELOW FOR PRODUCTION
 	// const viteURL = mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
 	mainWindow.loadURL(viteURL);
 
