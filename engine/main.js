@@ -9,13 +9,8 @@ const path = require('path');
 const fs = require('fs');
 
 let mainWindow;
-let configPath;
 
 app.whenReady().then(() => {
-	// Ensure config file
-	const configPath = ensureConfigFile();
-	console.log(`Configuration file is located at: ${configPath}`);
-
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		width: 800,
@@ -30,23 +25,14 @@ app.whenReady().then(() => {
 		},
 	});
 
-	const sendConfigStatus = () => {
-		const configStatus = checkConfigFile();
-		mainWindow.webContents.send('config-status', configStatus);
-	};
-
-	mainWindow.webContents.once('did-finish-load', sendConfigStatus);
-
-	// NOTE THIS IS ONLY FOR DEVELOPMENT
-	const viteURL = 'http://localhost:5173';
-
-	// NOTE USE BELOW FOR PRODUCTION
+	// Load your Vite React app
+	const viteURL = 'http://localhost:5173'; // Change this to your Vite dev server or production build URL
 	// const viteURL = mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
 	mainWindow.loadURL(viteURL);
 
 	// Register a cross-platform global shortcut
 	const shortcut =
-		process.platform === 'darwin' ? 'Command+Shift+R' : 'Control+Space';
+		process.platform === 'darwin' ? 'Command+Shift+R' : 'Control+Shift+R';
 	globalShortcut.register(shortcut, () => {
 		if (mainWindow.isVisible()) {
 			mainWindow.hide();
@@ -92,6 +78,16 @@ app.whenReady().then(() => {
 			return { success: false, message: 'Failed to copy file.' };
 		}
 	});
+
+	ipcMain.handle('ensure-config-file', () => {
+		try {
+			const configPath = ensureConfigFile();
+			return { success: true, path: configPath };
+		} catch (error) {
+			console.error('Error ensuring config file:', error);
+			return { success: false, message: 'Failed to ensure config file.' };
+		}
+	});
 });
 
 // Clean up on app quit
@@ -111,48 +107,69 @@ app.on('activate', () => {
 	}
 });
 
-const checkConfigFile = () => {
-	if (process.platform === 'win32') {
-		configPath = path.join('M:\\', 'repleye-config.json');
-	} else {
-		configPath = path.join(process.cwd(), 'config', 'repleye-config.json');
-	}
+// Function to ensure config file exists
+function ensureConfigFile() {
+	const mDrivePath = 'M:/repleye-config.json';
+	const localConfigDir = path.join(process.cwd(), 'config'); // Use current working directory
+	const localConfigPath = path.join(localConfigDir, 'repleye-config.json');
 
-	// Check if the file exists
-	if (!fs.existsSync(configPath)) {
-		console.log(`Config file not found at: ${configPath}`);
-		return { exists: false, valid: false };
-	}
-
-	// Validate the contents of the config file
 	try {
-		const configData = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-		const requiredKeys = ['first_name', 'last_name', 'simplified_name'];
+		// Check if M:/ exists and is accessible
+		if (process.platform === 'win32' && fs.existsSync('M:/')) {
+			// Check if file exists in M:/ and create if necessary
+			if (!fs.existsSync(mDrivePath)) {
+				fs.writeFileSync(mDrivePath, JSON.stringify({}), 'utf-8');
+			}
+			return mDrivePath;
+		} else {
+			// Use current working directory if M:/ is unavailable
+			// Ensure local config directory exists
+			if (!fs.existsSync(localConfigDir)) {
+				fs.mkdirSync(localConfigDir, { recursive: true });
+			}
 
-		// Check if all required keys exist
-		const isValid = requiredKeys.every((key) => key in configData);
-
-		return { exists: true, valid: isValid };
+			// Create config file if it doesn't exist
+			if (!fs.existsSync(localConfigPath)) {
+				fs.writeFileSync(localConfigPath, JSON.stringify({}), 'utf-8');
+			}
+			return localConfigPath;
+		}
 	} catch (error) {
-		console.error(`Error reading or parsing config: ${error.message}`);
-		return { exists: true, valid: false };
+		console.error('Error ensuring config file:', error);
+		throw new Error('Failed to create or locate the configuration file.');
 	}
-};
+}
+/* PRODUCTION
+// Function to ensure config file exists
+function ensureConfigFile() {
+	const mDrivePath = 'M:/repleye-config.json';
+	const localConfigDir = path.join(app.getPath('userData'), 'config');
+	const localConfigPath = path.join(localConfigDir, 'repleye-config.json');
 
-// Write to the config file
-const saveConfig = (data) => {
-	if (process.platform === 'win32') {
-		configPath = path.join('M:\\', 'repleye-config.json');
-	} else {
-		configPath = path.join(process.cwd(), 'config', 'repleye-config.json');
+	try {
+		// Check if M:/ exists and is accessible
+		if (process.platform === 'win32' && fs.existsSync('M:/')) {
+			// Check if file exists in M:/ and create if necessary
+			if (!fs.existsSync(mDrivePath)) {
+				fs.writeFileSync(mDrivePath, JSON.stringify({}), 'utf-8');
+			}
+			return mDrivePath;
+		} else {
+			// Use local directory if M:/ is unavailable
+			// Ensure local config directory exists
+			if (!fs.existsSync(localConfigDir)) {
+				fs.mkdirSync(localConfigDir, { recursive: true });
+			}
+
+			// Create config file if it doesn't exist
+			if (!fs.existsSync(localConfigPath)) {
+				fs.writeFileSync(localConfigPath, JSON.stringify({}), 'utf-8');
+			}
+			return localConfigPath;
+		}
+	} catch (error) {
+		console.error('Error ensuring config file:', error);
+		throw new Error('Failed to create or locate the configuration file.');
 	}
-
-	// Ensure directory exists (for non-Windows)
-	if (!fs.existsSync(path.dirname(configPath))) {
-		fs.mkdirSync(path.dirname(configPath), { recursive: true });
-	}
-
-	fs.writeFileSync(configPath, JSON.stringify(data, null, 2));
-	console.log(`Config saved at: ${configPath}`);
-	return true;
-};
+}
+*/
