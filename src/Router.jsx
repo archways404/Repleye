@@ -4,7 +4,19 @@ import ManualConfig from './components/manualConfig';
 import ExistingConfig from './components/existingConfig';
 
 function Router() {
-	const [activeComponent, setActiveComponent] = useState('setup');
+	const [activeComponent, setActiveComponent] = useState(null);
+
+	// Check if the config file exists on initial load
+	useEffect(() => {
+		window.electron.checkConfigExists().then((exists) => {
+			if (exists) {
+				setActiveComponent('home'); // Render 'home' if config exists
+			} else {
+				setActiveComponent('setup'); // Render 'setup' otherwise
+			}
+		});
+	}, []);
+
 	// Render the active component
 	const renderComponent = () => {
 		switch (activeComponent) {
@@ -23,18 +35,20 @@ function Router() {
 					</div>
 				);
 			default:
-				return <div>Page not found</div>;
+				return <div>Loading...</div>; // Loading state until activeComponent is set
 		}
 	};
 
 	return (
 		<div className="bg-red-400">
 			<div>
-				{/* Buttons to switch components */}
-				<button onClick={() => setActiveComponent('home')}>Home</button>
+				<div>
+					{/* Buttons to switch components */}
+					<button onClick={() => setActiveComponent('home')}>Home</button>
+				</div>
+				{/* Render the active component */}
+				{renderComponent()}
 			</div>
-			{/* Render the active component */}
-			{renderComponent()}
 		</div>
 	);
 }

@@ -88,6 +88,21 @@ app.whenReady().then(() => {
 			return { success: false, message: 'Failed to ensure config file.' };
 		}
 	});
+
+	ipcMain.handle('check-config-exists', () => {
+		try {
+			const configPath = path.join(
+				process.cwd(),
+				'config',
+				'repleye-config.json'
+			);
+			return fs.existsSync(configPath);
+		} catch (error) {
+			console.error('Error checking config file existence:', error);
+			return false; // Assume the config file doesn't exist if there's an error
+		}
+	});
+
 });
 
 // Clean up on app quit

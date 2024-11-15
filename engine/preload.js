@@ -12,6 +12,7 @@ window.addEventListener('DOMContentLoaded', () => {
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
+	checkConfigExists: () => ipcRenderer.invoke('check-config-exists'),
 	ensureConfigFile: () => ipcRenderer.invoke('ensure-config-file'),
 	selectConfigFile: () => ipcRenderer.invoke('select-config-file'),
 	getConfigPath: () => ipcRenderer.invoke('get-config-path'),
