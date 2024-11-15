@@ -12,6 +12,10 @@ let mainWindow;
 let configPath;
 
 app.whenReady().then(() => {
+	// Ensure config file
+	const configPath = ensureConfigFile();
+	console.log(`Configuration file is located at: ${configPath}`);
+
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		width: 800,
@@ -55,54 +59,39 @@ app.whenReady().then(() => {
 	mainWindow.on('blur', () => {
 		mainWindow.hide(); // Optional: Hide when the window loses focus
 	});
-});
 
-// Handle file creation
-ipcMain.on('create-config', (event, filePath) => {
-	try {
-		// Ensure a valid file path
-		const fullPath = path.join(filePath, 'repleye-config.json');
+	ipcMain.handle('get-config-path', () => configPath);
 
-		// Write the config file
-		fs.writeFileSync(fullPath, JSON.stringify({ created: true }, null, 2));
-		console.log(`Config created at: ${fullPath}`);
-		event.reply('config-created', true);
-	} catch (error) {
-		console.error(`Failed to create config: ${error.message}`);
-		event.reply('config-created', false);
-	}
-});
-
-ipcMain.on('save-config', (event, data) => {
-	try {
-		saveConfig(data);
-		event.reply('save-config-response', true);
-
-		// Send updated config status after saving
-		mainWindow.webContents.send('config-status', checkConfigFile());
-	} catch (error) {
-		console.error(`Failed to save config: ${error.message}`);
-		event.reply('save-config-response', false);
-	}
-});
-
-ipcMain.on('get-config', (event) => {
-	try {
-		if (fs.existsSync(configPath)) {
-			const configData = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
-			event.reply('get-config-response', { success: true, data: configData });
-		} else {
-			event.reply('get-config-response', {
-				success: false,
-				error: 'Config file does not exist.',
-			});
-		}
-	} catch (error) {
-		event.reply('get-config-response', {
-			success: false,
-			error: error.message,
+	// Provide dialog handler for selecting and copying a config file
+	ipcMain.handle('select-config-file', async () => {
+		const result = await dialog.showOpenDialog(mainWindow, {
+			properties: ['openFile'],
+			filters: [{ name: 'JSON Files', extensions: ['json'] }],
 		});
-	}
+
+		if (result.canceled || result.filePaths.length === 0) {
+			return { success: false, message: 'No file selected.' };
+		}
+
+		const selectedPath = result.filePaths[0];
+		const destDir = path.join(process.cwd(), 'config');
+		const destPath = path.join(destDir, 'repleye-config.json');
+
+		try {
+			// Ensure the destination directory exists
+			if (!fs.existsSync(destDir)) {
+				fs.mkdirSync(destDir, { recursive: true });
+			}
+
+			// Copy the selected file
+			fs.copyFileSync(selectedPath, destPath);
+
+			return { success: true, message: `File copied to ${destPath}` };
+		} catch (error) {
+			console.error('Error copying config file:', error);
+			return { success: false, message: 'Failed to copy file.' };
+		}
+	});
 });
 
 // Clean up on app quit

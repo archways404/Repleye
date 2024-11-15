@@ -12,26 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
-	getConfigStatus: (callback) => ipcRenderer.on('config-status', callback),
-	saveConfig: (data) =>
-		new Promise((resolve) => {
-			ipcRenderer.once('save-config-response', (event, success) =>
-				resolve(success)
-			);
-			ipcRenderer.send('save-config', data);
-		}),
-	getConfig: () =>
-		new Promise((resolve) => {
-			ipcRenderer.once('get-config-response', (event, response) =>
-				resolve(response)
-			);
-			ipcRenderer.send('get-config');
-		}),
-	openFileDialog: () =>
-		new Promise((resolve) => {
-			ipcRenderer.once('file-dialog-path', (event, filePath) =>
-				resolve(filePath)
-			);
-			ipcRenderer.send('open-file-dialog');
-		}),
+	getConfigPath: () => ipcRenderer.invoke('get-config-path'),
+	selectConfigFile: () => ipcRenderer.invoke('select-config-file'),
 });
