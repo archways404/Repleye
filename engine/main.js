@@ -32,7 +32,7 @@ app.whenReady().then(() => {
 
 	// Register a cross-platform global shortcut
 	const shortcut =
-		process.platform === 'darwin' ? 'Command+Shift+R' : 'Control+Shift+R';
+		process.platform === 'darwin' ? 'Command+Shift+R' : 'Control+Space';
 	globalShortcut.register(shortcut, () => {
 		if (mainWindow.isVisible()) {
 			mainWindow.hide();
