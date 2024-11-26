@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import SetupSelector from './components/setupSelector';
 import ManualConfig from './components/manualConfig';
 import ExistingConfig from './components/existingConfig';
-import ListEntries from './components/listEntries'; // Import ListEntries
+import ListEntries from './components/listEntries';
 
 function Router() {
 	const [activeComponent, setActiveComponent] = useState(null);
@@ -17,6 +17,13 @@ function Router() {
 		});
 	}, []);
 
+	useEffect(() => {
+		window.electron.send('resize-window', {
+			width: document.documentElement.scrollWidth,
+			height: document.documentElement.scrollHeight,
+		});
+	}, [activeComponent]);
+
 	const renderComponent = () => {
 		switch (activeComponent) {
 			case 'setup':
@@ -30,8 +37,7 @@ function Router() {
 			case 'home':
 				return (
 					<div>
-						<h1>Welcome</h1>
-						{/* Render ListEntries */}
+						<h1 className="text-center text-white text-2xl mb-4">Welcome</h1>
 						<ListEntries />
 					</div>
 				);
@@ -41,13 +47,8 @@ function Router() {
 	};
 
 	return (
-		<div className="bg-red-400">
-			<div>
-				<button
-					onClick={() => setActiveComponent('home')}
-					className="bg-orange-500">
-					Home
-				</button>
+		<div className="flex justify-center items-center">
+			<div className="backdrop-blur-lg bg-black/50 rounded-xl shadow-lg p-6 max-w-fit max-h-fit w-auto">
 				{renderComponent()}
 			</div>
 		</div>

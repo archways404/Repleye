@@ -20,4 +20,5 @@ contextBridge.exposeInMainWorld('electron', {
 		ipcRenderer.invoke('open-file-in-editor', filePath),
 	readConfig: () => ipcRenderer.invoke('read-config'), // Delegate to main process
 	hideWindow: () => ipcRenderer.send('hide-window'), // Expose method to hide the window
+	send: (channel, data) => ipcRenderer.send(channel, data),
 });

@@ -17,7 +17,7 @@ app.whenReady().then(() => {
 	mainWindow = new BrowserWindow({
 		width: 800,
 		height: 600,
-		show: true, // Start visible
+		show: false,
 		center: true,
 		alwaysOnTop: true,
 		frame: false, // Hides the title bar and window controls
@@ -38,6 +38,31 @@ app.whenReady().then(() => {
 		if (mainWindow.isVisible()) {
 			mainWindow.hide();
 		} else {
+			mainWindow.show();
+		}
+	});
+
+	mainWindow.webContents.once('did-finish-load', () => {
+		mainWindow.webContents.executeJavaScript(`
+        (() => {
+            const { ipcRenderer } = require('electron');
+            const width = document.documentElement.scrollWidth;
+            const height = document.documentElement.scrollHeight;
+            ipcRenderer.send('resize-window', { width, height });
+        })();
+    `);
+	});
+
+	ipcMain.on('resize-window', (event, { width, height }) => {
+		// Dynamically resize the window to fit the content
+		mainWindow.setBounds({
+			width: Math.ceil(width),
+			height: Math.ceil(height),
+		});
+
+		// Center the window after resizing and ensure it is visible
+		mainWindow.center();
+		if (!mainWindow.isVisible()) {
 			mainWindow.show();
 		}
 	});
@@ -146,7 +171,6 @@ app.whenReady().then(() => {
 			mainWindow.hide();
 		}
 	});
-
 });
 
 // Clean up on app quit

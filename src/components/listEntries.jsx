@@ -7,12 +7,11 @@ function ListEntries() {
 	const [message, setMessage] = useState('');
 
 	useEffect(() => {
-		// Fetch the entries from the config file
 		window.electron
 			.readConfig()
 			.then((config) => {
 				if (config && config.entries) {
-					setEntries(Object.entries(config.entries)); // Get entries as [key, value] pairs
+					setEntries(Object.entries(config.entries));
 				} else {
 					setError('No entries found in the config file.');
 				}
@@ -21,12 +20,10 @@ function ListEntries() {
 	}, []);
 
 	useEffect(() => {
-		// Handle key presses
 		const handleKeyPress = (event) => {
 			const { key } = event;
 
 			if (!selectedEntry) {
-				// Handle entry selection (1-based index)
 				const index = parseInt(key, 10) - 1;
 				if (index >= 0 && index < entries.length) {
 					setSelectedEntry(entries[index]);
@@ -35,7 +32,6 @@ function ListEntries() {
 					);
 				}
 			} else {
-				// Handle actions for the selected entry
 				if (key === 's' || key === 'e') {
 					const content =
 						key === 's'
@@ -43,7 +39,6 @@ function ListEntries() {
 							: selectedEntry[1]['contents-eng'];
 
 					if (content) {
-						// Write HTML content to the clipboard
 						navigator.clipboard
 							.write([
 								new ClipboardItem({
@@ -56,7 +51,6 @@ function ListEntries() {
 										selectedEntry[0]
 									}.`
 								);
-								// Hide the window after 1 second
 								setTimeout(() => {
 									window.electron.hideWindow();
 								}, 1000);
@@ -64,12 +58,10 @@ function ListEntries() {
 					} else {
 						setMessage('No content available for this selection.');
 					}
-					// Reset selection
 					setSelectedEntry(null);
 				}
 			}
 
-			// Hide the window if Escape is pressed
 			if (key === 'Escape') {
 				window.electron.hideWindow();
 			}
@@ -82,33 +74,26 @@ function ListEntries() {
 	}, [entries, selectedEntry]);
 
 	if (error) {
-		return <div>Error: {error}</div>;
+		return <div className="text-red-500">{error}</div>;
 	}
 
 	return (
-		<div>
-			<h2>Entries</h2>
-			<ul>
+		<div className="p-6">
+			<h2 className="text-lg text-white mb-4">Entries</h2>
+			<ul className="space-y-2 max-w-fit">
 				{entries.map(([entryName], index) => (
 					<li
 						key={entryName}
-						style={{
-							padding: '8px',
-							cursor: 'pointer',
-							backgroundColor:
-								selectedEntry && selectedEntry[0] === entryName
-									? '#f0c674'
-									: 'transparent',
-							fontWeight:
-								selectedEntry && selectedEntry[0] === entryName
-									? 'bold'
-									: 'normal',
-						}}>
+						className={`p-2 rounded-lg cursor-pointer ${
+							selectedEntry && selectedEntry[0] === entryName
+								? 'bg-blue-500 text-white font-bold'
+								: 'bg-white/10 hover:bg-white/20'
+						}`}>
 						{index + 1}. {entryName}
 					</li>
 				))}
 			</ul>
-			{message && <p>{message}</p>}
+			{message && <p className="text-white mt-4">{message}</p>}
 		</div>
 	);
 }
