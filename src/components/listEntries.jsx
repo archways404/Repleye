@@ -41,18 +41,26 @@ function ListEntries() {
 						key === 's'
 							? selectedEntry[1]['contents-swe']
 							: selectedEntry[1]['contents-eng'];
+
 					if (content) {
-						navigator.clipboard.writeText(content).then(() => {
-							setMessage(
-								`Copied ${key === 's' ? 'Swedish' : 'English'} content for ${
-									selectedEntry[0]
-								}.`
-							);
-							// Hide the window after 1 second
-							setTimeout(() => {
-								window.electron.hideWindow();
-							}, 1000);
-						});
+						// Write HTML content to the clipboard
+						navigator.clipboard
+							.write([
+								new ClipboardItem({
+									'text/html': new Blob([content], { type: 'text/html' }),
+								}),
+							])
+							.then(() => {
+								setMessage(
+									`Copied ${key === 's' ? 'Swedish' : 'English'} content for ${
+										selectedEntry[0]
+									}.`
+								);
+								// Hide the window after 1 second
+								setTimeout(() => {
+									window.electron.hideWindow();
+								}, 1000);
+							});
 					} else {
 						setMessage('No content available for this selection.');
 					}
