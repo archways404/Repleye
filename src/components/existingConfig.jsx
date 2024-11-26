@@ -16,9 +16,17 @@ function ExistingConfig({ onPageSelect }) {
 		<div>
 			<h1>Existing Configuration</h1>
 			<p>Select an existing `repleye-config.json` file to use:</p>
-			<button onClick={handleFileSelect}>Select File</button>
+			<button
+				onClick={handleFileSelect}
+				className="bg-blue-500">
+				Select File
+			</button>
 			<p>{statusMessage}</p>
-			<button onClick={() => onPageSelect('home')}>Home</button>
+			<button
+				onClick={() => onPageSelect('home')}
+				className="bg-blue-500">
+				Home
+			</button>
 		</div>
 	);
 }

@@ -36,10 +36,18 @@ function ManualConfig({ onPageSelect }) {
 				<>
 					<p>Config file is located at:</p>
 					<pre>{configPath}</pre>
-					<button onClick={handleOpenFile}>Open Config File</button>
+					<button
+						onClick={handleOpenFile}
+						className="bg-blue-500">
+						Open Config File
+					</button>
 				</>
 			)}
-			<button onClick={() => onPageSelect('home')}>Home</button>
+			<button
+				onClick={() => onPageSelect('home')}
+				className="bg-blue-500">
+				Home
+			</button>
 		</div>
 	);
 }
