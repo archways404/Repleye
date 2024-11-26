@@ -1,8 +1,5 @@
 {
 	"custom": true,
-	"first_name": "John",
-	"last_name": "Doe",
-	"simplified_name": "John D",
 	"entries": {
 		"exampleTitle1": {
 			"contents-swe": "example1SWE",
@@ -11,6 +8,10 @@
 		"exampleTitle2": {
 			"contents-swe": "example2SWE",
 			"contents-eng": "example2ENG"
+		},
+		"exampleTitle3": {
+			"contents-swe": "<p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">Hi!<o:p></o:p></p><p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">&nbsp;<o:p></o:p></p><p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">Effective January 1st, 2024, Ladok will require a security level of \"AL2\" or higher for login access.<o:p></o:p></p><p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">For detailed information on what this entails and the steps you need to take, please visit the following link: <a href=\"https://mau.se/al2\" target=\"_blank\" title=\"https://mau.se/al2\" style=\"color: rgb(5, 99, 193); text-decoration: underline;\">AL2 Requirements</a>.<br><br><o:p></o:p></p><p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">In summary, you will need to log in to IDS to verify your email address and phone number before completing your verification with BankID. You can access IDS here: <a href=\"https://ids.mau.se\" target=\"_blank\" title=\"https://ids.mau.se/\" style=\"color: rgb(5, 99, 193); text-decoration: underline;\">IDS Login</a>.<br><br><a href=\"https://mau.se/al2\" target=\"_blank\" title=\"https://mau.se/al2\" style=\"color: rgb(5, 99, 193); text-decoration: underline;\">https://mau.se/al2</a><br><a href=\"https://ids.mau.se\" target=\"_blank\" title=\"https://ids.mau.se/\" style=\"color: rgb(5, 99, 193); text-decoration: underline;\">https://ids.mau.se</a><o:p></o:p></p>",
+			"contents-eng": "<p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">Hi!<o:p></o:p></p><p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">&nbsp;<o:p></o:p></p><p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">Effective January 1st, 2024, Ladok will require a security level of \"AL2\" or higher for login access.<o:p></o:p></p><p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">For detailed information on what this entails and the steps you need to take, please visit the following link: <a href=\"https://mau.se/al2\" target=\"_blank\" title=\"https://mau.se/al2\" style=\"color: rgb(5, 99, 193); text-decoration: underline;\">AL2 Requirements</a>.<br><br><o:p></o:p></p><p class=\"MsoNormal\" style=\"margin: 0cm; font-size: 12pt; font-family: Calibri, sans-serif;\">In summary, you will need to log in to IDS to verify your email address and phone number before completing your verification with BankID. You can access IDS here: <a href=\"https://ids.mau.se\" target=\"_blank\" title=\"https://ids.mau.se/\" style=\"color: rgb(5, 99, 193); text-decoration: underline;\">IDS Login</a>.<br><br><a href=\"https://mau.se/al2\" target=\"_blank\" title=\"https://mau.se/al2\" style=\"color: rgb(5, 99, 193); text-decoration: underline;\">https://mau.se/al2</a><br><a href=\"https://ids.mau.se\" target=\"_blank\" title=\"https://ids.mau.se/\" style=\"color: rgb(5, 99, 193); text-decoration: underline;\">https://ids.mau.se</a><o:p></o:p></p>"
 		}
 	}
 }
