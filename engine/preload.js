@@ -16,4 +16,6 @@ contextBridge.exposeInMainWorld('electron', {
 	ensureConfigFile: () => ipcRenderer.invoke('ensure-config-file'),
 	selectConfigFile: () => ipcRenderer.invoke('select-config-file'),
 	getConfigPath: () => ipcRenderer.invoke('get-config-path'),
+	openFileInEditor: (filePath) =>
+		ipcRenderer.invoke('open-file-in-editor', filePath),
 });

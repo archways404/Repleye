@@ -15,6 +15,18 @@ function ManualConfig({ onPageSelect }) {
 		});
 	}, []);
 
+	const handleOpenFile = () => {
+		if (configPath) {
+			window.electron.openFileInEditor(configPath).then((result) => {
+				if (!result.success) {
+					setStatusMessage(
+						result.message || 'Failed to open file in text editor.'
+					);
+				}
+			});
+		}
+	};
+
 	return (
 		<div>
 			<h1>Configuration</h1>
@@ -24,6 +36,7 @@ function ManualConfig({ onPageSelect }) {
 				<>
 					<p>Config file is located at:</p>
 					<pre>{configPath}</pre>
+					<button onClick={handleOpenFile}>Open Config File</button>
 				</>
 			)}
 			<button onClick={() => onPageSelect('home')}>Home</button>

@@ -1,1 +1,16 @@
-{}
+{
+    "custom": true,
+    "first_name": "John",
+    "last_name": "Doe",
+    "simplified_name": "John D",
+    "entries": {
+        "exampleTitle1": {
+            "contents-swe": "example1SWE",
+            "contents-eng": "example1ENG"
+        },
+        "exampleTitle2": {
+            "contents-swe": "example2SWE",
+            "contents-eng": "example2ENG"
+        }
+    }
+}

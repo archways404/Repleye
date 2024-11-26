@@ -4,7 +4,9 @@ const {
 	globalShortcut,
 	ipcMain,
 	dialog,
+	shell,
 } = require('electron');
+const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 
@@ -25,8 +27,7 @@ app.whenReady().then(() => {
 		},
 	});
 
-	// Load your Vite React app
-	const viteURL = 'http://localhost:5173'; // Change this to your Vite dev server or production build URL
+	const viteURL = 'http://localhost:5173';
 	// const viteURL = mainWindow.loadFile(path.join(__dirname, '../dist/index.html'));
 	mainWindow.loadURL(viteURL);
 
@@ -102,7 +103,24 @@ app.whenReady().then(() => {
 			return false; // Assume the config file doesn't exist if there's an error
 		}
 	});
+});
 
+// Updated IPC handler
+ipcMain.handle('open-file-in-editor', async (event, filePath) => {
+	try {
+		// Check platform and launch editor explicitly
+		if (process.platform === 'win32') {
+			exec(`notepad.exe "${filePath}"`); // Use Notepad on Windows
+		} else if (process.platform === 'darwin') {
+			exec(`open -a "TextEdit" "${filePath}"`); // Use TextEdit on macOS
+		} else {
+			exec(`xdg-open "${filePath}"`); // Use default text editor on Linux
+		}
+		return { success: true };
+	} catch (error) {
+		console.error('Error opening file in editor:', error);
+		return { success: false, message: error.message };
+	}
 });
 
 // Clean up on app quit
@@ -128,24 +146,44 @@ function ensureConfigFile() {
 	const localConfigDir = path.join(process.cwd(), 'config'); // Use current working directory
 	const localConfigPath = path.join(localConfigDir, 'repleye-config.json');
 
+	const defaultConfig = {
+		custom: true,
+		first_name: 'John',
+		last_name: 'Doe',
+		simplified_name: 'John D',
+		entries: {
+			exampleTitle1: {
+				'contents-swe': 'example1SWE',
+				'contents-eng': 'example1ENG',
+			},
+			exampleTitle2: {
+				'contents-swe': 'example2SWE',
+				'contents-eng': 'example2ENG',
+			},
+		},
+	};
+
 	try {
 		// Check if M:/ exists and is accessible
 		if (process.platform === 'win32' && fs.existsSync('M:/')) {
-			// Check if file exists in M:/ and create if necessary
 			if (!fs.existsSync(mDrivePath)) {
-				fs.writeFileSync(mDrivePath, JSON.stringify({}), 'utf-8');
+				fs.writeFileSync(
+					mDrivePath,
+					JSON.stringify(defaultConfig, null, 4),
+					'utf-8'
+				);
 			}
 			return mDrivePath;
 		} else {
-			// Use current working directory if M:/ is unavailable
-			// Ensure local config directory exists
 			if (!fs.existsSync(localConfigDir)) {
 				fs.mkdirSync(localConfigDir, { recursive: true });
 			}
-
-			// Create config file if it doesn't exist
 			if (!fs.existsSync(localConfigPath)) {
-				fs.writeFileSync(localConfigPath, JSON.stringify({}), 'utf-8');
+				fs.writeFileSync(
+					localConfigPath,
+					JSON.stringify(defaultConfig, null, 4),
+					'utf-8'
+				);
 			}
 			return localConfigPath;
 		}
@@ -154,6 +192,7 @@ function ensureConfigFile() {
 		throw new Error('Failed to create or locate the configuration file.');
 	}
 }
+
 /* PRODUCTION
 // Function to ensure config file exists
 function ensureConfigFile() {
