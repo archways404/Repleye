@@ -174,9 +174,6 @@ function ensureConfigFile() {
 
 	const defaultConfig = {
 		custom: true,
-		first_name: 'John',
-		last_name: 'Doe',
-		simplified_name: 'John D',
 		entries: {
 			exampleTitle1: {
 				'contents-swe': 'example1SWE',
