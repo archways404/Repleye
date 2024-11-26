@@ -31,7 +31,8 @@ function Router() {
 				return (
 					<div>
 						<h1>Welcome</h1>
-						<ListEntries /> {/* Render ListEntries */}
+						{/* Render ListEntries */}
+						<ListEntries />
 					</div>
 				);
 			default:

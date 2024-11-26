@@ -121,7 +121,32 @@ app.whenReady().then(() => {
 			return { success: false, message: error.message };
 		}
 	});
-	
+
+	ipcMain.handle('read-config', async () => {
+		const configPath = path.join(
+			process.cwd(),
+			'config',
+			'repleye-config.json'
+		);
+		try {
+			if (fs.existsSync(configPath)) {
+				const data = fs.readFileSync(configPath, 'utf-8');
+				return JSON.parse(data);
+			} else {
+				throw new Error('Config file does not exist');
+			}
+		} catch (error) {
+			console.error('Error reading config file:', error);
+			throw error; // This will be sent back to the renderer
+		}
+	});
+
+	ipcMain.on('hide-window', () => {
+		if (mainWindow) {
+			mainWindow.hide();
+		}
+	});
+
 });
 
 // Clean up on app quit
