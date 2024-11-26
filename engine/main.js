@@ -103,24 +103,25 @@ app.whenReady().then(() => {
 			return false; // Assume the config file doesn't exist if there's an error
 		}
 	});
-});
 
-// Updated IPC handler
-ipcMain.handle('open-file-in-editor', async (event, filePath) => {
-	try {
-		// Check platform and launch editor explicitly
-		if (process.platform === 'win32') {
-			exec(`notepad.exe "${filePath}"`); // Use Notepad on Windows
-		} else if (process.platform === 'darwin') {
-			exec(`open -a "TextEdit" "${filePath}"`); // Use TextEdit on macOS
-		} else {
-			exec(`xdg-open "${filePath}"`); // Use default text editor on Linux
+	// Updated IPC handler
+	ipcMain.handle('open-file-in-editor', async (event, filePath) => {
+		try {
+			// Check platform and launch editor explicitly
+			if (process.platform === 'win32') {
+				exec(`notepad.exe "${filePath}"`); // Use Notepad on Windows
+			} else if (process.platform === 'darwin') {
+				exec(`open -a "TextEdit" "${filePath}"`); // Use TextEdit on macOS
+			} else {
+				exec(`xdg-open "${filePath}"`); // Use default text editor on Linux
+			}
+			return { success: true };
+		} catch (error) {
+			console.error('Error opening file in editor:', error);
+			return { success: false, message: error.message };
 		}
-		return { success: true };
-	} catch (error) {
-		console.error('Error opening file in editor:', error);
-		return { success: false, message: error.message };
-	}
+	});
+	
 });
 
 // Clean up on app quit
