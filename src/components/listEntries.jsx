@@ -116,25 +116,34 @@ function ListEntries() {
 	}
 
 	return (
-		<div className="p-6">
-			<h2 className="text-lg text-white mb-4">Entries</h2>
-			<ul className="space-y-2 max-w-fit">
+		<div className="p-8">
+			<h2 className="text-2xl text-gray-100 font-bold mb-6 text-center">
+				Available Entries
+			</h2>
+			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
 				{entries.map(([entryName], index) => (
-					<li
+					<div
 						key={entryName}
-						className={`p-2 rounded-lg cursor-pointer ${
-							selectedEntry && selectedEntry[0] === entryName
-								? 'bg-blue-500 text-white font-bold'
-								: 'bg-white/10 hover:bg-white/20'
-						}`}>
-						{index < 9
-							? `${index + 1}`
-							: String.fromCharCode('A'.charCodeAt(0) + index - 9)}
-						. {entryName}
-					</li>
+						className="flex items-center space-x-4 p-4 bg-white/10 rounded-xl shadow-md hover:bg-white/20 transition-all duration-200 cursor-pointer">
+						<div
+							className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-white ${
+								selectedEntry && selectedEntry[0] === entryName
+									? 'bg-blue-500'
+									: 'bg-gray-700'
+							}`}>
+							{index < 9
+								? `${index + 1}`
+								: String.fromCharCode('A'.charCodeAt(0) + index - 9)}
+						</div>
+						<div className="text-lg text-gray-300">{entryName}</div>
+					</div>
 				))}
-			</ul>
-			{message && <p className="text-white mt-4">{message}</p>}
+			</div>
+			{message && (
+				<p className="mt-6 text-center text-gray-100 bg-gray-800/60 rounded-lg p-3 shadow-lg">
+					{message}
+				</p>
+			)}
 		</div>
 	);
 }
