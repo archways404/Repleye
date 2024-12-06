@@ -33,6 +33,16 @@ function ListEntries() {
 				setResetTimeout(null);
 			}
 
+			if (key === 'Escape') {
+				if (!selectedEntry) {
+					// Hide window when Escape key is pressed
+					window.electron.hideWindow();
+				} else {
+					setSelectedEntry(null);
+				}
+				return;
+			}
+
 			if (!selectedEntry) {
 				// Handle numeric (1-9) and alphabetic (A-Z) keys for entry selection
 				if (/^\d$/.test(key)) {
