@@ -16,11 +16,12 @@ app.whenReady().then(() => {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		width: 800,
-		height: 600,
-		show: false,
+		height: 800,
+		show: true,
 		center: true,
+		resizable: false,
+		frame: false,
 		alwaysOnTop: true,
-		frame: false, // Hides the title bar and window controls
 		transparent: true, // Optional: Makes the window background transparent
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
@@ -33,36 +34,11 @@ app.whenReady().then(() => {
 
 	// Register a cross-platform global shortcut
 	const shortcut =
-		process.platform === 'darwin' ? 'Command+Shift+R' : 'Control+Space';
+		process.platform === 'darwin' ? 'Control+Space' : 'Control+Space';
 	globalShortcut.register(shortcut, () => {
 		if (mainWindow.isVisible()) {
 			mainWindow.hide();
 		} else {
-			mainWindow.show();
-		}
-	});
-
-	mainWindow.webContents.once('did-finish-load', () => {
-		mainWindow.webContents.executeJavaScript(`
-        (() => {
-            const { ipcRenderer } = require('electron');
-            const width = document.documentElement.scrollWidth;
-            const height = document.documentElement.scrollHeight;
-            ipcRenderer.send('resize-window', { width, height });
-        })();
-    `);
-	});
-
-	ipcMain.on('resize-window', (event, { width, height }) => {
-		// Dynamically resize the window to fit the content
-		mainWindow.setBounds({
-			width: Math.ceil(width),
-			height: Math.ceil(height),
-		});
-
-		// Center the window after resizing and ensure it is visible
-		mainWindow.center();
-		if (!mainWindow.isVisible()) {
 			mainWindow.show();
 		}
 	});

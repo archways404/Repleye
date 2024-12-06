@@ -47,12 +47,15 @@ function Router() {
 	};
 
 	return (
-		<div className="flex justify-center items-center">
-			<div className="backdrop-blur-lg bg-black/50 rounded-xl shadow-lg p-6 max-w-fit max-h-fit w-auto">
-				{renderComponent()}
+		<div className="w-screen h-screen bg-gradient-to-br from-gray-900/65 via-gray-700/55 to-gray-900/65">
+			{/* Frosted glass effect container */}
+			<div className="flex justify-center items-center w-screen h-screen backdrop-blur-3xl bg-white/20 border border-white/50 rounded-xl drop-shadow-lg">
+				{/* Render your component inside */}
+				<div className="p-8">{renderComponent()}</div>
 			</div>
 		</div>
 	);
+
 }
 
 export default Router;
