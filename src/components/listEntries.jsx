@@ -139,48 +139,55 @@ function ListEntries() {
 				Available Entries
 			</h2>
 			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-				{entries.map(([entryName], index) => (
+				{entries.map(([entryName, value], index) => (
 					<div
 						key={entryName}
-						className="flex flex-col items-center space-y-4 p-4 bg-white/10 rounded-xl shadow-md hover:bg-white/20 transition-all duration-200">
-						{selectedEntry && selectedEntry[0] === entryName ? (
-							<div className="flex space-x-2">
-								<button
-									onClick={() => handleCopy('s')}
-									className={`w-10 h-10 bg-gray-700 text-white font-bold rounded-lg transition-all ${
-										buttonHighlight === 's' ? 'bg-green-500 text-white' : ''
-									}`}>
-									S
-								</button>
-								<button
-									onClick={() => handleCopy('e')}
-									className={`w-10 h-10 bg-gray-700 text-white font-bold rounded-lg transition-all ${
-										buttonHighlight === 'e' ? 'bg-green-500 text-white' : ''
-									}`}>
-									E
-								</button>
-							</div>
-						) : (
-							<div
-								className={`flex items-center justify-center w-10 h-10 rounded-full font-bold text-white ${
-									selectedEntry ? 'bg-gray-500' : 'bg-gray-700'
-								}`}>
-								{index < 9
-									? `${index + 1}`
-									: String.fromCharCode('A'.charCodeAt(0) + index - 9)}
-							</div>
-						)}
-						<div className="text-lg text-gray-300">{entryName}</div>
+						className="flex flex-col items-center justify-between w-52 h-26 bg-white/10 rounded-xl shadow-md hover:bg-white/20 transition-all duration-200 p-2">
+						{/* Number or S/E Buttons Section */}
+						<div className="flex items-center justify-center mb-4">
+							{selectedEntry && selectedEntry[0] === entryName ? (
+								<div className="flex space-x-3">
+									<button
+										onClick={() => handleCopy('s')}
+										className={`w-10 h-10 border-2 border-gray-700 text-gray-700 font-bold rounded-lg transition-all ${
+											buttonHighlight === 's'
+												? 'bg-green-500 text-white'
+												: 'hover:bg-gray-700 hover:text-white'
+										}`}>
+										S
+									</button>
+									<button
+										onClick={() => handleCopy('e')}
+										className={`w-10 h-10 border-2 border-gray-700 text-gray-700 font-bold rounded-lg transition-all ${
+											buttonHighlight === 'e'
+												? 'bg-green-500 text-white'
+												: 'hover:bg-gray-700 hover:text-white'
+										}`}>
+										E
+									</button>
+								</div>
+							) : (
+								<div className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-white bg-gray-700">
+									{index < 9
+										? `${index + 1}`
+										: String.fromCharCode('A'.charCodeAt(0) + index - 9)}
+								</div>
+							)}
+						</div>
+						{/* Entry Name Section */}
+						<div
+							className="text-gray-300 text-center overflow-hidden leading-tight"
+							style={{
+								fontSize: 'clamp(14px, 1vw, 18px)',
+								whiteSpace: 'nowrap',
+								textOverflow: 'ellipsis',
+								width: '100%',
+							}}>
+							{entryName}
+						</div>
 					</div>
 				))}
 			</div>
-			{/*
-			{message && (
-				<p className="mt-6 text-center text-gray-100 bg-gray-800/60 rounded-lg p-3 shadow-lg">
-					{message}
-				</p>
-			)}
-			*/}
 		</div>
 	);
 }
