@@ -37,7 +37,6 @@ function Router() {
 			case 'home':
 				return (
 					<div>
-						<h1 className="text-center text-white text-2xl mb-4">Welcome</h1>
 						<ListEntries />
 					</div>
 				);
@@ -51,7 +50,7 @@ function Router() {
 			{/* Frosted glass effect container */}
 			<div className="flex justify-center items-center w-screen h-screen backdrop-blur-3xl bg-white/20 border border-white/50 rounded-xl drop-shadow-lg">
 				{/* Render your component inside */}
-				<div className="p-8">{renderComponent()}</div>
+				<div className="w-screen">{renderComponent()}</div>
 			</div>
 		</div>
 	);

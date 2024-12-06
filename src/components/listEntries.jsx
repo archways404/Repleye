@@ -134,60 +134,70 @@ function ListEntries() {
 	}
 
 	return (
-		<div className="p-8">
-			<h2 className="text-2xl text-gray-100 font-bold mb-6 text-center">
-				Available Entries
-			</h2>
-			<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-				{entries.map(([entryName, value], index) => (
-					<div
-						key={entryName}
-						className="flex flex-col items-center justify-between w-52 h-26 bg-white/10 rounded-xl shadow-md hover:bg-white/20 transition-all duration-200 p-2">
-						{/* Number or S/E Buttons Section */}
-						<div className="flex items-center justify-center mb-4">
-							{selectedEntry && selectedEntry[0] === entryName ? (
-								<div className="flex space-x-3">
-									<button
-										onClick={() => handleCopy('s')}
-										className={`w-10 h-10 border-2 border-gray-700 text-gray-700 font-bold rounded-lg transition-all ${
-											buttonHighlight === 's'
-												? 'bg-green-500 text-white'
-												: 'hover:bg-gray-700 hover:text-white'
-										}`}>
-										S
-									</button>
-									<button
-										onClick={() => handleCopy('e')}
-										className={`w-10 h-10 border-2 border-gray-700 text-gray-700 font-bold rounded-lg transition-all ${
-											buttonHighlight === 'e'
-												? 'bg-green-500 text-white'
-												: 'hover:bg-gray-700 hover:text-white'
-										}`}>
-										E
-									</button>
-								</div>
-							) : (
-								<div className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-white bg-gray-700">
-									{index < 9
-										? `${index + 1}`
-										: String.fromCharCode('A'.charCodeAt(0) + index - 9)}
-								</div>
-							)}
-						</div>
-						{/* Entry Name Section */}
+		<div className="flex flex-col h-screen">
+			{/* Main Content */}
+			<div className="p-8 flex-grow overflow-y-auto">
+				<h2 className="text-2xl text-gray-100 font-bold mb-6 text-center">
+					Available Entries
+				</h2>
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+					{entries.map(([entryName, value], index) => (
 						<div
-							className="text-gray-300 text-center overflow-hidden leading-tight"
-							style={{
-								fontSize: 'clamp(14px, 1vw, 18px)',
-								whiteSpace: 'nowrap',
-								textOverflow: 'ellipsis',
-								width: '100%',
-							}}>
-							{entryName}
+							key={entryName}
+							className="flex flex-col items-center justify-between w-52 h-26 bg-white/10 rounded-xl shadow-md hover:bg-white/20 transition-all duration-200 p-2">
+							{/* Number or S/E Buttons Section */}
+							<div className="flex items-center justify-center mb-4">
+								{selectedEntry && selectedEntry[0] === entryName ? (
+									<div className="flex space-x-3">
+										<button
+											onClick={() => handleCopy('s')}
+											className={`w-10 h-10 border-2 border-gray-700 text-gray-700 font-bold rounded-lg transition-all ${
+												buttonHighlight === 's'
+													? 'bg-green-500 text-white border-none'
+													: 'hover:bg-gray-700 hover:text-white'
+											}`}>
+											S
+										</button>
+										<button
+											onClick={() => handleCopy('e')}
+											className={`w-10 h-10 border-2 border-gray-700 text-gray-700 font-bold rounded-lg transition-all ${
+												buttonHighlight === 'e'
+													? 'bg-green-500 text-white border-none'
+													: 'hover:bg-gray-700 hover:text-white'
+											}`}>
+											E
+										</button>
+									</div>
+								) : (
+									<div className="flex items-center justify-center w-10 h-10 rounded-full font-bold text-white bg-gray-700">
+										{index < 9
+											? `${index + 1}`
+											: String.fromCharCode('A'.charCodeAt(0) + index - 9)}
+									</div>
+								)}
+							</div>
+							{/* Entry Name Section */}
+							<div
+								className="text-gray-300 text-center overflow-hidden leading-tight"
+								style={{
+									fontSize: 'clamp(14px, 1vw, 18px)',
+									whiteSpace: 'nowrap',
+									textOverflow: 'ellipsis',
+									width: '100%',
+								}}>
+								{entryName}
+							</div>
 						</div>
-					</div>
-				))}
+					))}
+				</div>
 			</div>
+
+			{/* Footer */}
+			<footer className="text-gray-400 text-center py-2 w-full">
+				<p className="text-sm">
+					&copy; {new Date().getFullYear()} Software404. All rights reserved.
+				</p>
+			</footer>
 		</div>
 	);
 }
