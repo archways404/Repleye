@@ -28,25 +28,30 @@ function ManualConfig({ onPageSelect }) {
 	};
 
 	return (
-		<div>
-			<h1>Configuration</h1>
+		<div className="p-8 space-y-6">
+			<h1 className="text-3xl text-center font-bold text-gray-100">
+				Configuration
+			</h1>
 			{statusMessage ? (
-				<p>{statusMessage}</p>
+				<p className="text-gray-300 bg-red-500/20 rounded-lg p-4 shadow-md">
+					{statusMessage}
+				</p>
 			) : (
-				<>
-					<p>Config file is located at:</p>
-					<pre>{configPath}</pre>
+				<div className="w-full space-y-4">
+					<pre className="text-gray-100 bg-gray-800/40 rounded-lg p-4 text-justify shadow-inner">
+						{configPath}
+					</pre>
 					<button
 						onClick={handleOpenFile}
-						className="bg-blue-500">
-						Open Config File
+						className="w-full border-2 border-gray-700 text-gray-800 font-semibold py-3 rounded-lg transition-all hover:bg-gray-700 hover:text-white">
+						Edit Config File
 					</button>
-				</>
+				</div>
 			)}
 			<button
 				onClick={() => onPageSelect('home')}
-				className="bg-blue-500">
-				Home
+				className="w-full border-2 border-green-500 text-green-500 font-semibold py-3 rounded-lg transition-all hover:bg-green-500 hover:text-white">
+				Continue
 			</button>
 		</div>
 	);
