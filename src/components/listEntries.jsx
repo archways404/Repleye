@@ -135,6 +135,33 @@ function ListEntries() {
 
 	return (
 		<div className="flex flex-col h-screen">
+			{/* Navbar */}
+			<nav className="text-gray-200 p-4">
+				<div className="flex justify-between items-center max-w-4xl mx-auto">
+					{/* ASCII Art */}
+					<pre className="text-sm font-mono leading-none">
+						{`
+   __  _______   ______
+  /  |/  / __ \\ / ____/
+ / /|_/ / /_/ // /     
+/ /  / / ____// /___   
+/_/  /_/_/     \\____/  
+`}
+					</pre>
+					<div className="flex space-x-4">
+						<button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white">
+							Button 1
+						</button>
+						<button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white">
+							Button 2
+						</button>
+						<button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white">
+							Button 3
+						</button>
+					</div>
+				</div>
+			</nav>
+
 			{/* Main Content */}
 			<div className="p-8 flex-grow overflow-y-auto">
 				<h2 className="text-2xl text-gray-100 font-bold mb-6 text-center">
@@ -200,6 +227,7 @@ function ListEntries() {
 			</footer>
 		</div>
 	);
+
 }
 
 export default ListEntries;
