@@ -156,15 +156,13 @@ function ListEntries() {
 `}
 					</pre>
 
+					{/* Navbar Buttons */}
 					<div className="flex space-x-4">
-						<button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white">
-							Button 1
+						<button className="px-4 text-sm py-2 border-2 border-green-500 text-green-500 font-bold rounded-lg hover:bg-gray-700 hover:text-white transition-all">
+							Import Remote Config
 						</button>
-						<button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white">
-							Button 2
-						</button>
-						<button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white">
-							Button 3
+						<button className="px-4 text-sm py-2 border-2 border-green-500 text-green-500 font-bold rounded-lg hover:bg-gray-700 hover:text-white transition-all">
+							Edit Config
 						</button>
 					</div>
 				</div>
