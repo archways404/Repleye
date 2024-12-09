@@ -136,16 +136,14 @@ function ListEntries() {
 	return (
 		<div className="flex flex-col h-screen">
 			{/* Navbar */}
-			<nav className="text-gray-200 p-4">
+			<nav className="text-green-500 p-4">
 				<div className="flex justify-between items-center max-w-4xl mx-auto">
 					{/* ASCII Art */}
-					<pre className="text-sm font-mono leading-none">
+					<pre className="text-xs font-mono leading-none text-center">
 						{`
-   __  _______   ______
-  /  |/  / __ \\ / ____/
- / /|_/ / /_/ // /     
-/ /  / / ____// /___   
-/_/  /_/_/     \\____/  
+ _ \\  __|  _ \\  |     __| \\ \\  /  __| 
+   /  _|   __/  |     _|   \\  /   _|  
+_|_\\ ___| _|   ____| ___|   _|   ___|
 `}
 					</pre>
 					<div className="flex space-x-4">
