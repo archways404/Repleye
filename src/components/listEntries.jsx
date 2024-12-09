@@ -139,13 +139,23 @@ function ListEntries() {
 			<nav className="text-green-500 p-4">
 				<div className="flex justify-between items-center max-w-4xl mx-auto">
 					{/* ASCII Art */}
-					<pre className="text-xs font-mono leading-none text-center">
+					<pre className="text-[6px] pl-4 font-mono leading-tight text-center">
 						{`
- _ \\  __|  _ \\  |     __| \\ \\  /  __| 
-   /  _|   __/  |     _|   \\  /   _|  
-_|_\\ ___| _|   ____| ___|   _|   ___|
+                                                                     
+@@@@@@@   @@@@@@@@  @@@@@@@   @@@       @@@@@@@@  @@@ @@@  @@@@@@@@  
+@@@@@@@@  @@@@@@@@  @@@@@@@@  @@@       @@@@@@@@  @@@ @@@  @@@@@@@@  
+@@!  @@@  @@!       @@!  @@@  @@!       @@!       @@! !@@  @@!       
+!@!  @!@  !@!       !@!  @!@  !@!       !@!       !@! @!!  !@!       
+@!@!!@!   @!!!:!    @!@@!@!   @!!       @!!!:!     !@!@!   @!!!:!    
+!!@!@!    !!!!!:    !!@!!!    !!!       !!!!!:      @!!!   !!!!!:    
+!!: :!!   !!:       !!:       !!:       !!:         !!:    !!:       
+:!:  !:!  :!:       :!:        :!:      :!:         :!:    :!:       
+::   :::   :: ::::   ::        :: ::::   :: ::::     ::     :: ::::  
+ :   : :  : :: ::    :        : :: : :  : :: ::      :     : :: ::   
+                                                                     
 `}
 					</pre>
+
 					<div className="flex space-x-4">
 						<button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white">
 							Button 1
